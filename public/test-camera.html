@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Câmera - Sistema Lavanderia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        
+        video {
+            width: 100%;
+            max-width: 400px;
+            height: 300px;
+            background: #000;
+            border-radius: 5px;
+        }
+        
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .test-result {
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Teste de Câmera - Sistema Lavanderia</h1>
+        <p>Esta página testa se a câmera funciona corretamente para o scanner de QR Code.</p>
+        
+        <div class="test-section">
+            <h2>📋 Diagnóstico Automático</h2>
+            <div id="diagnostico"></div>
+            <button onclick="executarDiagnostico()">🔍 Executar Diagnóstico</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>📷 Teste de Câmera</h2>
+            <video id="video" autoplay playsinline></video>
+            <br>
+            <button onclick="iniciarCamera()">📷 Iniciar Câmera</button>
+            <button onclick="pararCamera()">⏹️ Parar Câmera</button>
+            <div id="camera-status"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>📱 Informações do Sistema</h2>
+            <div id="system-info"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔧 Soluções Rápidas</h2>
+            <div id="solucoes-rapidas"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔗 Links Úteis</h2>
+            <p>
+                <a href="motorista/dashboard" target="_blank">🚚 Dashboard do Motorista</a><br>
+                <a href="../CAMERA_TROUBLESHOOTING.md" target="_blank">📖 Guia de Solução de Problemas</a><br>
+                <a href="https://localhost/lavanderia/public/motorista/dashboard" target="_blank">🔒 Acesso HTTPS (se configurado)</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let stream = null;
+        
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.innerHTML = message;
+            return div;
+        }
+        
+        function executarDiagnostico() {
+            const diagnosticoDiv = document.getElementById('diagnostico');
+            const solucoesDiv = document.getElementById('solucoes-rapidas');
+            diagnosticoDiv.innerHTML = '';
+            solucoesDiv.innerHTML = '';
+
+            let problemas = [];
+            let solucoes = [];
+
+            // Verificar protocolo
+            const isSecure = location.protocol === 'https:' ||
+                           location.hostname === 'localhost' ||
+                           location.hostname === '127.0.0.1';
+
+            diagnosticoDiv.appendChild(log(
+                `🔒 Protocolo: ${location.protocol} ${isSecure ? '✅' : '❌ Necessário HTTPS ou localhost'}`,
+                isSecure ? 'success' : 'error'
+            ));
+
+            if (!isSecure) {
+                problemas.push('protocolo');
+                solucoes.push(`
+                    <div class="status error">
+                        <strong>❌ Problema: Protocolo não seguro</strong><br>
+                        <strong>Solução:</strong> Acesse via <a href="http://localhost/lavanderia/public/test-camera.html" target="_blank">http://localhost/lavanderia/public/test-camera.html</a><br>
+                        <strong>Ou configure HTTPS:</strong> Execute o arquivo <code>setup-https-wamp.bat</code> como administrador
+                    </div>
+                `);
+            }
+
+            // Verificar host
+            const isLocalhost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+            diagnosticoDiv.appendChild(log(
+                `🌐 Host: ${location.hostname} ${isLocalhost || location.protocol === 'https:' ? '✅' : '❌'}`,
+                isLocalhost || location.protocol === 'https:' ? 'success' : 'error'
+            ));
+
+            if (!isLocalhost && location.protocol !== 'https:') {
+                problemas.push('host');
+                if (!solucoes.some(s => s.includes('localhost'))) {
+                    solucoes.push(`
+                        <div class="status error">
+                            <strong>❌ Problema: Host não é localhost nem HTTPS</strong><br>
+                            <strong>Solução:</strong> Acesse via <a href="http://localhost/lavanderia/public/test-camera.html" target="_blank">localhost</a>
+                        </div>
+                    `);
+                }
+            }
+
+            // Verificar getUserMedia
+            const hasGetUserMedia = navigator.mediaDevices && navigator.mediaDevices.getUserMedia;
+            diagnosticoDiv.appendChild(log(
+                `📹 getUserMedia: ${hasGetUserMedia ? '✅ Suportado' : '❌ Não suportado'}`,
+                hasGetUserMedia ? 'success' : 'error'
+            ));
+            
+            // Verificar navegador
+            const userAgent = navigator.userAgent;
+            let browser = 'Desconhecido';
+            let browserStatus = 'warning';
+            
+            if (userAgent.includes('Chrome')) {
+                browser = 'Chrome ✅';
+                browserStatus = 'success';
+            } else if (userAgent.includes('Firefox')) {
+                browser = 'Firefox ✅';
+                browserStatus = 'success';
+            } else if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) {
+                browser = 'Safari ⚠️';
+                browserStatus = 'warning';
+            } else if (userAgent.includes('Edge')) {
+                browser = 'Edge ✅';
+                browserStatus = 'success';
+            }
+            
+            diagnosticoDiv.appendChild(log(`🌐 Navegador: ${browser}`, browserStatus));
+            
+            // Verificar dispositivo
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+            diagnosticoDiv.appendChild(log(
+                `📱 Dispositivo: ${isMobile ? 'Mobile' : 'Desktop'}`,
+                'info'
+            ));
+            
+            // Verificar permissões
+            if (navigator.permissions) {
+                navigator.permissions.query({name: 'camera'}).then(result => {
+                    const status = result.state === 'granted' ? 'success' :
+                                 result.state === 'denied' ? 'error' : 'warning';
+                    const text = result.state === 'granted' ? '✅ Permitida' :
+                               result.state === 'denied' ? '❌ Negada' : '⚠️ Não definida';
+
+                    diagnosticoDiv.appendChild(log(`🔐 Permissão: ${text}`, status));
+
+                    if (result.state === 'denied') {
+                        solucoes.push(`
+                            <div class="status error">
+                                <strong>❌ Problema: Permissão de câmera negada</strong><br>
+                                <strong>Solução:</strong><br>
+                                1. Clique no ícone de câmera 📷 na barra de endereços<br>
+                                2. Selecione "Permitir" para câmera<br>
+                                3. Recarregue a página (F5)
+                            </div>
+                        `);
+                    }
+
+                    // Mostrar soluções
+                    if (solucoes.length > 0) {
+                        solucoesDiv.innerHTML = solucoes.join('');
+                    } else {
+                        solucoesDiv.innerHTML = '<div class="status success"><strong>✅ Tudo configurado corretamente!</strong><br>A câmera deve funcionar normalmente.</div>';
+                    }
+                }).catch(() => {
+                    diagnosticoDiv.appendChild(log('🔐 Permissão: ❓ Não verificável', 'warning'));
+                    if (solucoes.length > 0) {
+                        solucoesDiv.innerHTML = solucoes.join('');
+                    }
+                });
+            } else {
+                if (solucoes.length > 0) {
+                    solucoesDiv.innerHTML = solucoes.join('');
+                }
+            }
+            
+            // Verificar câmeras disponíveis
+            if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
+                navigator.mediaDevices.enumerateDevices().then(devices => {
+                    const cameras = devices.filter(device => device.kind === 'videoinput');
+                    const status = cameras.length > 0 ? 'success' : 'error';
+                    diagnosticoDiv.appendChild(log(
+                        `📷 Câmeras: ${cameras.length} encontrada(s) ${cameras.length > 0 ? '✅' : '❌'}`,
+                        status
+                    ));
+                }).catch(() => {
+                    diagnosticoDiv.appendChild(log('📷 Câmeras: ❌ Erro ao verificar', 'error'));
+                });
+            }
+        }
+        
+        async function iniciarCamera() {
+            const statusDiv = document.getElementById('camera-status');
+            const video = document.getElementById('video');
+            
+            try {
+                statusDiv.innerHTML = '';
+                statusDiv.appendChild(log('🔄 Iniciando câmera...', 'info'));
+                
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: 'environment',
+                        width: { ideal: 640 },
+                        height: { ideal: 480 }
+                    }
+                });
+                
+                video.srcObject = stream;
+                statusDiv.appendChild(log('✅ Câmera iniciada com sucesso!', 'success'));
+                
+            } catch (error) {
+                console.error('Erro ao iniciar câmera:', error);
+                let mensagem = '❌ Erro: ';
+                
+                if (error.name === 'NotAllowedError') {
+                    mensagem += 'Permissão negada';
+                } else if (error.name === 'NotFoundError') {
+                    mensagem += 'Câmera não encontrada';
+                } else if (error.name === 'NotSupportedError') {
+                    mensagem += 'Câmera não suportada';
+                } else {
+                    mensagem += error.message;
+                }
+                
+                statusDiv.appendChild(log(mensagem, 'error'));
+            }
+        }
+        
+        function pararCamera() {
+            const statusDiv = document.getElementById('camera-status');
+            const video = document.getElementById('video');
+            
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+                video.srcObject = null;
+                statusDiv.appendChild(log('⏹️ Câmera parada', 'info'));
+            }
+        }
+        
+        function mostrarInfoSistema() {
+            const infoDiv = document.getElementById('system-info');
+            
+            const info = [
+                `URL: ${location.href}`,
+                `Protocolo: ${location.protocol}`,
+                `Host: ${location.hostname}`,
+                `Navegador: ${navigator.userAgent}`,
+                `Idioma: ${navigator.language}`,
+                `Plataforma: ${navigator.platform}`,
+                `Cookies habilitados: ${navigator.cookieEnabled ? 'Sim' : 'Não'}`,
+                `Online: ${navigator.onLine ? 'Sim' : 'Não'}`
+            ];
+            
+            infoDiv.innerHTML = info.map(item => `<div class="test-result">${item}</div>`).join('');
+        }
+        
+        // Executar diagnóstico e mostrar info do sistema ao carregar
+        window.addEventListener('load', function() {
+            executarDiagnostico();
+            mostrarInfoSistema();
+        });
+    </script>
+</body>
+</html>

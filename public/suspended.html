@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Suspended - AWS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Amazon Ember', 'Helvetica Neue', Roboto, Arial, sans-serif;
+            background-color: #eaeded;
+            color: #16191f;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: #232f3e;
+            padding: 16px 0;
+            margin-bottom: 30px;
+            box-shadow: 0 1px 1px rgba(0,0,0,.05);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffffff;
+            font-family: 'Amazon Ember', 'Helvetica Neue', Arial, sans-serif;
+            letter-spacing: -1px;
+        }
+
+        .alert-banner {
+            background-color: #fff3cd;
+            border-left: 4px solid #ff9900;
+            padding: 20px 24px;
+            margin-bottom: 30px;
+            border-radius: 2px;
+            box-shadow: 0 1px 1px rgba(0,0,0,.05);
+        }
+
+        .alert-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #16191f;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .alert-icon {
+            width: 22px;
+            height: 22px;
+            margin-right: 10px;
+            color: #ff9900;
+        }
+
+        .alert-message {
+            color: #16191f;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .main-content {
+            background-color: #ffffff;
+            border: 1px solid #d5dbdb;
+            border-radius: 2px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 1px 1px rgba(0,0,0,.05);
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 400;
+            color: #16191f;
+            margin-bottom: 24px;
+        }
+
+        .info-section {
+            margin-bottom: 32px;
+        }
+
+        .info-section h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #16191f;
+            margin-bottom: 12px;
+        }
+
+        .info-section p {
+            color: #545b64;
+            font-size: 14px;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .info-list {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 12px;
+        }
+
+        .info-list li {
+            color: #545b64;
+            font-size: 14px;
+            padding: 6px 0;
+            padding-left: 24px;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .info-list li:before {
+            content: "•";
+            color: #ff9900;
+            font-weight: bold;
+            position: absolute;
+            left: 8px;
+        }
+
+        .notice-box {
+            background-color: #f1f3f3;
+            border: 1px solid #d5dbdb;
+            border-radius: 2px;
+            padding: 24px;
+            margin-top: 32px;
+        }
+
+        .notice-box h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #16191f;
+            margin-bottom: 12px;
+        }
+
+        .notice-box p {
+            color: #545b64;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 24px 20px;
+            color: #687078;
+            font-size: 12px;
+            border-top: 1px solid #d5dbdb;
+            margin-top: 40px;
+        }
+
+        .footer p {
+            margin-bottom: 8px;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: #d5dbdb;
+            margin: 32px 0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background-color: #d13212;
+            color: #ffffff;
+            padding: 4px 12px;
+            border-radius: 2px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 24px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .alert-title {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">aws</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="alert-banner">
+            <div class="alert-title">
+                <svg class="alert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                Account Suspended
+            </div>
+            <div class="alert-message">
+                This AWS account has been suspended due to billing issues. To restore access to your services, you must resolve outstanding payment obligations.
+            </div>
+        </div>
+
+        <div class="main-content">
+            <span class="status-badge">Suspended</span>
+            <h1>Your AWS Account Has Been Suspended</h1>
+
+            <div class="info-section">
+                <h2>Why was my account suspended?</h2>
+                <p>Your AWS account has been temporarily suspended due to one or more of the following billing-related issues:</p>
+                <ul class="info-list">
+                    <li>Outstanding payment balance on your account</li>
+                    <li>Payment method declined, expired, or invalid</li>
+                    <li>Billing information requires immediate update</li>
+                    <li>Failure to resolve previous billing notifications</li>
+                </ul>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="info-section">
+                <h2>What happens during suspension?</h2>
+                <p>While your account is suspended, the following restrictions apply:</p>
+                <ul class="info-list">
+                    <li>Access to AWS Management Console is limited</li>
+                    <li>Running services and resources may be stopped</li>
+                    <li>New resource creation is disabled</li>
+                    <li>API access may be restricted</li>
+                    <li>Data retention policies remain in effect for a limited time</li>
+                </ul>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="info-section">
+                <h2>How to restore your account</h2>
+                <p>To reactivate your AWS account and restore full access to your services, you must:</p>
+                <ul class="info-list">
+                    <li>Sign in to the AWS Billing Console to review your account status</li>
+                    <li>Update your payment method with valid billing information</li>
+                    <li>Clear all outstanding balances on your account</li>
+                    <li>Verify that your payment method can process the required charges</li>
+                    <li>Wait for account verification (typically 1-2 hours after payment)</li>
+                </ul>
+            </div>
+
+            <div class="notice-box">
+                <h3>Important Notice</h3>
+                <p>Failure to resolve billing issues within the specified timeframe may result in permanent account closure and data loss. Please take immediate action to regularize your payment and restore your account access.</p>
+                <p style="margin-top: 12px;">For detailed billing information and payment options, please access the AWS Billing and Cost Management Console using your account credentials.</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.</p>
+            <p>This is an automated system notification. This page is for informational purposes only.</p>
+        </div>
+    </div>
+</body>
+</html>
