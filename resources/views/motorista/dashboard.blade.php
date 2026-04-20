@@ -550,7 +550,6 @@
                         </div>
                     </div>
                 @endif
-                @endforelse
             </div>
         </div>
     </div>
