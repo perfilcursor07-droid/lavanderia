@@ -3,8 +3,8 @@
 @section('title', 'Adicionar Itens - Sistema de Gestão de Lavanderia')
 
 @php
-    // Detectar se o estabelecimento usa precificação por peso
-    $estabelecimentoPorPeso = $coleta->estabelecimento && $coleta->estabelecimento->tipo_precificacao === 'peso';
+    // Não forçar modo de coleta - deixar o usuário escolher
+    $estabelecimentoPorPeso = false;
 @endphp
 
 @push('styles')
